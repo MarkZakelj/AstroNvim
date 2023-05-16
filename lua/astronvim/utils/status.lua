@@ -83,7 +83,7 @@ M.env.separators = astronvim.user_opts("heirline.separators", {
 })
 
 M.env.attributes = astronvim.user_opts("heirline.attributes", {
-  buffer_active = { bold = true, italic = true },
+  buffer_active = { bold = true, italic = true, fg="#439540" },
   buffer_picker = { bold = true },
   macro_recording = { bold = true },
   git_branch = { bold = true },
@@ -188,7 +188,16 @@ end
 -- @usage local heirline_component = { provider = "Example Provider", hl = require("astronvim.utils.status").hl.get_attributes("treesitter") },
 function M.hl.get_attributes(name, include_bg)
   local hl = M.env.attributes[name] or {}
-  hl.fg = name .. "_fg"
+  if hl.fg then
+    local color = "#42dd76"
+    if M.condition.file_modified((self or {})) then
+      color = "#cd8d7a"
+    end
+    hl.fg = color
+  end
+  if not hl.fg then
+    hl.fg = name .. "_fg"
+  end
   if include_bg then hl.bg = name .. "_bg" end
   return hl
 end
